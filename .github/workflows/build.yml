@@ -16,7 +16,7 @@ jobs:
     
     - name: Download imagefs from Winlator releases
       run: |
-        curl -L -o winlator.apk "https://github.com/brunodev85/winlator/releases/download/v10.1.0/Winlator_10.1.apk"
+        curl -L --retry 3 -o winlator.apk "https://github.com/brunodev85/winlator/releases/download/v11.0.0/Winlator_11.0.apk"
         unzip -j winlator.apk "assets/imagefs.txz" -d app/src/main/assets/
         
     - name: Set up JDK 17
