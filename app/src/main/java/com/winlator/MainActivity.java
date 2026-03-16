@@ -128,17 +128,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.containers_menu_add) {
-            return super.onOptionsItemSelected(menuItem);
-        }
-        else {
+        
             if (editInputControls) {
                 setResult(RESULT_OK);
                 finish();
             }
             else drawerLayout.openDrawer(GravityCompat.START);
             return true;
-        }
     }
 
     @Override
