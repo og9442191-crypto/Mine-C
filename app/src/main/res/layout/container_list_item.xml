@@ -15,38 +15,39 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/IVGameCover"
+            android:id="@+id/ImageView"
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:scaleType="centerCrop"
             android:background="#1a1a3a"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:padding="10dp"
             android:background="#0d0d2b">
 
             <TextView
-                android:id="@+id/TVContainerName"
+                android:id="@+id/TVTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/BTMenu"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
-            <TextView
-                android:id="@+id/TVContainerDetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#4fc3f7"
-                android:textSize="11sp"
-                android:paddingTop="2dp"/>
+            <ImageButton
+                android:id="@+id/BTMenu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_more_vert"
+                android:tint="#4fc3f7"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
