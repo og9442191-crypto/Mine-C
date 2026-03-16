@@ -195,12 +195,12 @@ public class ShortcutsFragment extends Fragment {
             if (!containers.isEmpty()) {
                 com.winlator.container.Container container = containers.get(0);
                 Activity activity = getActivity();
-                if (!com.winlator.xserver.XrActivity.isSupported()) {
+                if (!com.winlator.XrActivity.isSupported()) {
                     Intent intent = new Intent(activity, com.winlator.XServerDisplayActivity.class);
                     intent.putExtra("container_id", container.id);
                     intent.putExtra("shortcut_path", destFile.getPath());
                     activity.startActivity(intent);
-                } else com.winlator.xserver.XrActivity.openIntent(activity, container.id, destFile.getPath());
+                } else com.winlator.XrActivity.openIntent(activity, container.id, destFile.getPath());
             }
         } catch (Exception e) {
             e.printStackTrace();
