@@ -177,34 +177,48 @@ public class ShortcutsFragment extends Fragment {
     private void importAndRunExe(Uri uri) {
         try {
             android.content.Context context = getContext();
-            java.io.File exeDir = new java.io.File(context.getFilesDir(), "imported_games");
-            exeDir.mkdirs();
             String fileName = uri.getLastPathSegment();
             if (fileName != null && fileName.contains("/")) {
                 fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
             }
-            java.io.File destFile = new java.io.File(exeDir, fileName);
-            try (java.io.InputStream in = context.getContentResolver().openInputStream(uri);
-                 java.io.FileOutputStream out = new java.io.FileOutputStream(destFile)) {
-                byte[] buf = new byte[4096];
-                int len;
-                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-            }
-            // Pegar o primeiro container disponivel e rodar
+            final String exeName = fileName;
+            // Verificar se ja existe container, se nao criar um padrao
             java.util.List<com.winlator.container.Container> containers = manager.getContainers();
-            if (!containers.isEmpty()) {
-                com.winlator.container.Container container = containers.get(0);
-                Activity activity = getActivity();
-                if (!com.winlator.XrActivity.isSupported()) {
-                    Intent intent = new Intent(activity, com.winlator.XServerDisplayActivity.class);
-                    intent.putExtra("container_id", container.id);
-                    intent.putExtra("shortcut_path", destFile.getPath());
-                    activity.startActivity(intent);
-                } else com.winlator.XrActivity.openIntent(activity, container.id, destFile.getPath());
+            if (containers.isEmpty()) {
+                // Criar container padrao automaticamente
+                org.json.JSONObject data = new org.json.JSONObject();
+                data.put("name", "Mine-C Default");
+                data.put("screenSize", com.winlator.container.Container.DEFAULT_SCREEN_SIZE);
+                data.put("envVars", com.winlator.container.Container.DEFAULT_ENV_VARS);
+                data.put("graphicsDriver", com.winlator.container.Container.DEFAULT_GRAPHICS_DRIVER);
+                data.put("dxwrapper", com.winlator.container.Container.DEFAULT_DXWRAPPER);
+                data.put("audioDriver", com.winlator.container.Container.DEFAULT_AUDIO_DRIVER);
+                data.put("wincomponents", com.winlator.container.Container.DEFAULT_WIN_COMPONENTS);
+                data.put("drives", com.winlator.container.Container.DEFAULT_DRIVES);
+                manager.createContainerAsync(data, (container) -> {
+                    if (container != null) {
+                        runExeWithContainer(uri, exeName, container);
+                    }
+                });
+            } else {
+                runExeWithContainer(uri, exeName, containers.get(0));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void runExeWithContainer(Uri uri, String exeName, com.winlator.container.Container container) {
+        Activity activity = getActivity();
+        if (activity == null) return;
+        activity.runOnUiThread(() -> {
+            if (!com.winlator.XrActivity.isSupported()) {
+                Intent intent = new Intent(activity, com.winlator.XServerDisplayActivity.class);
+                intent.putExtra("container_id", container.id);
+                intent.putExtra("shortcut_path", uri.getPath());
+                activity.startActivity(intent);
+            } else com.winlator.XrActivity.openIntent(activity, container.id, uri.getPath());
+        });
     }
 
 }
