@@ -123,6 +123,13 @@ public class ContainersFragment extends Fragment {
             holder.imageView.setImageResource(R.drawable.icon_container);
             holder.title.setText(item.getName());
             holder.menuButton.setOnClickListener((view) -> showListItemMenu(view, item));
+                holder.itemView.setOnClickListener((view) -> {
+                    if (!XrActivity.isSupported()) {
+                        Intent intent = new Intent(getContext(), XServerDisplayActivity.class);
+                        intent.putExtra("container_id", item.id);
+                        getContext().startActivity(intent);
+                    } else XrActivity.openIntent(getActivity(), item.id, null);
+                });
         }
 
         @Override
