@@ -18,11 +18,11 @@ jobs:
       run: |
         git clone --depth 1 https://github.com/KhronosGroup/OpenXR-SDK.git app/src/main/cpp/OpenXR-SDK
 
-    - name: Download assets from Winlator releases
+    - name: Download assets from Winlator 7.1
       run: |
-        curl -L --retry 3 -o winlator.apk "https://github.com/brunodev85/winlator/releases/download/v11.0.0/Winlator_11.0.apk"
-        unzip -j winlator.apk "assets/rootfs.tzst" -d app/src/main/assets/
-        unzip -j winlator.apk "assets/rootfs_patches.tzst" -d app/src/main/assets/
+        curl -L --retry 3 -o winlator.apk "https://github.com/brunodev85/winlator/releases/download/v7.1.0/Winlator_7.1.apk"
+        unzip -j winlator.apk "assets/imagefs.txz" -d app/src/main/assets/
+        unzip -j winlator.apk "assets/imagefs_patches.tzst" -d app/src/main/assets/
         
     - name: Set up JDK 17
       uses: actions/setup-java@v4
