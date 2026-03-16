@@ -193,7 +193,7 @@ public class ShortcutsFragment extends Fragment {
                 data.put("graphicsDriver", com.winlator.container.Container.DEFAULT_GRAPHICS_DRIVER);
                 data.put("dxwrapper", com.winlator.container.Container.DEFAULT_DXWRAPPER);
                 data.put("audioDriver", com.winlator.container.Container.DEFAULT_AUDIO_DRIVER);
-                data.put("wincomponents", com.winlator.container.Container.DEFAULT_WIN_COMPONENTS);
+                data.put("wincomponents", com.winlator.container.Container.DEFAULT_WINCOMPONENTS);
                 data.put("drives", com.winlator.container.Container.DEFAULT_DRIVES);
                 manager.createContainerAsync(data, (container) -> {
                     if (container != null) {
