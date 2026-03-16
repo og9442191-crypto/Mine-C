@@ -78,20 +78,6 @@ public class ContainersFragment extends Fragment {
         menuInflater.inflate(R.menu.containers_menu, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.containers_menu_add) {
-            if (!ImageFs.find(getContext()).isValid()) return false;
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.FLFragmentContainer, new ContainerDetailFragment())
-                .commit();
-            return true;
-        }
-        else return super.onOptionsItemSelected(menuItem);
-    }
-
     private class ContainersAdapter extends RecyclerView.Adapter<ContainersAdapter.ViewHolder> {
         private final List<Container> data;
 
@@ -145,14 +131,6 @@ public class ContainersFragment extends Fragment {
 
             listItemMenu.setOnMenuItemClickListener((menuItem) -> {
                 switch (menuItem.getItemId()) {
-                    case R.id.container_run:
-                        if (!XrActivity.isSupported()) {
-                            Intent intent = new Intent(context, XServerDisplayActivity.class);
-                            intent.putExtra("container_id", container.id);
-                            context.startActivity(intent);
-                        }
-                        else XrActivity.openIntent(getActivity(), container.id, null);
-                        break;
                     case R.id.container_edit:
                         FragmentManager fragmentManager = getParentFragmentManager();
                         fragmentManager.beginTransaction()
