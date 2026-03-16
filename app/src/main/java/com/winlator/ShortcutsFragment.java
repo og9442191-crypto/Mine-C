@@ -12,6 +12,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.content.Intent;
+import android.net.Uri;
+import androidx.annotation.NonNull;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,7 +45,7 @@ public class ShortcutsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -145,4 +152,59 @@ public class ShortcutsFragment extends Fragment {
             else XrActivity.openIntent(activity, shortcut.container.id, shortcut.file.getPath());
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.shortcuts_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.shortcuts_menu_import) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            ((MainActivity)getActivity()).setOpenFileCallback((uri) -> {
+                importAndRunExe(uri);
+            });
+            startActivityForResult(Intent.createChooser(intent, "Selecionar .exe"), 1001);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void importAndRunExe(Uri uri) {
+        try {
+            android.content.Context context = getContext();
+            java.io.File exeDir = new java.io.File(context.getFilesDir(), "imported_games");
+            exeDir.mkdirs();
+            String fileName = uri.getLastPathSegment();
+            if (fileName != null && fileName.contains("/")) {
+                fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+            }
+            java.io.File destFile = new java.io.File(exeDir, fileName);
+            try (java.io.InputStream in = context.getContentResolver().openInputStream(uri);
+                 java.io.FileOutputStream out = new java.io.FileOutputStream(destFile)) {
+                byte[] buf = new byte[4096];
+                int len;
+                while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+            }
+            // Pegar o primeiro container disponivel e rodar
+            java.util.List<com.winlator.container.Container> containers = manager.getContainers();
+            if (!containers.isEmpty()) {
+                com.winlator.container.Container container = containers.get(0);
+                Activity activity = getActivity();
+                if (!com.winlator.xserver.XrActivity.isSupported()) {
+                    Intent intent = new Intent(activity, com.winlator.XServerDisplayActivity.class);
+                    intent.putExtra("container_id", container.id);
+                    intent.putExtra("shortcut_path", destFile.getPath());
+                    activity.startActivity(intent);
+                } else com.winlator.xserver.XrActivity.openIntent(activity, container.id, destFile.getPath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
