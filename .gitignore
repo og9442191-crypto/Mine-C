@@ -1,0 +1,9 @@
+android-sdk/
+cmdtools.zip
+build/
+.gradle/
+app/.gradle/
+local.properties
+minec.keystore
+winlator.apk
+*.apk.idsig
