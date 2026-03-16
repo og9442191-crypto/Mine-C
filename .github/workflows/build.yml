@@ -28,6 +28,12 @@ jobs:
         
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
+
+    - name: Install NDK
+      run: |
+        echo "y" | sdkmanager "ndk;22.1.7171670"
+        echo "ndk.dir=$ANDROID_SDK_ROOT/ndk/22.1.7171670" >> local.properties
+        echo "sdk.dir=$ANDROID_SDK_ROOT" >> local.properties
       
     - name: Build APK
       run: ./gradlew assembleDebug
