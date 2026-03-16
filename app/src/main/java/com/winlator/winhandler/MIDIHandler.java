@@ -58,7 +58,7 @@ public class MIDIHandler {
     }
 
     public void outputPortConnect() {
-        String selectedDevice = winHandler.activity.getPreferences().getString("midi_input_device", "auto");
+        String selectedDevice = winHandler.activity.getPreferences(0).getString("midi_input_device", "auto");
         if (selectedDevice.equals("none")) return;
 
         MidiManager mm = (MidiManager)winHandler.activity.getSystemService(Context.MIDI_SERVICE);
@@ -112,7 +112,7 @@ public class MIDIHandler {
         sendData.put(2, param2);
 
         for (final int port : midiInClients) {
-            winHandler.addAction(() -> winHandler.sendPacket(port, sendData.array()));
+            winHandler.addAction(() -> { winHandler.sendData.rewind(); winHandler.sendData.put(sendData.array()); winHandler.sendPacket(port); });
         }
 
         return true;

@@ -28,25 +28,25 @@ public class WinHandler {
     public static final byte DINPUT_MAPPER_TYPE_STANDARD = 0;
     public static final byte DINPUT_MAPPER_TYPE_XINPUT = 1;
     private DatagramSocket socket;
-    private final ByteBuffer sendData = ByteBuffer.allocate(64).order(ByteOrder.LITTLE_ENDIAN);
+    public final ByteBuffer sendData = ByteBuffer.allocate(64).order(ByteOrder.LITTLE_ENDIAN);
     private final ByteBuffer receiveData = ByteBuffer.allocate(64).order(ByteOrder.LITTLE_ENDIAN);
     private final DatagramPacket sendPacket = new DatagramPacket(sendData.array(), 64);
     private final DatagramPacket receivePacket = new DatagramPacket(receiveData.array(), 64);
     private final ArrayDeque<Runnable> actions = new ArrayDeque<>();
-    private boolean initReceived = false;
+    public boolean initReceived = false;
     private boolean running = false;
     private OnGetProcessInfoListener onGetProcessInfoListener;
     private ExternalController currentController;
     private InetAddress localhost;
     private byte dinputMapperType = DINPUT_MAPPER_TYPE_XINPUT;
-    private final XServerDisplayActivity activity;
+    public final XServerDisplayActivity activity;
     private final List<Integer> gamepadClients = new CopyOnWriteArrayList<>();
 
     public WinHandler(XServerDisplayActivity activity) {
         this.activity = activity;
     }
 
-    private boolean sendPacket(int port) {
+    public boolean sendPacket(int port) {
         try {
             int size = sendData.position();
             if (size == 0) return false;
@@ -173,7 +173,7 @@ public class WinHandler {
         });
     }
 
-    private void addAction(Runnable action) {
+    public void addAction(Runnable action) {
         synchronized (actions) {
             actions.add(action);
             actions.notify();
