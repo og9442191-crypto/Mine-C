@@ -14,6 +14,10 @@ jobs:
         submodules: false
         fetch-depth: 1
     
+    - name: Clone OpenXR SDK
+      run: |
+        git clone --depth 1 https://github.com/KhronosGroup/OpenXR-SDK.git app/src/main/cpp/OpenXR-SDK
+
     - name: Download assets from Winlator releases
       run: |
         curl -L --retry 3 -o winlator.apk "https://github.com/brunodev85/winlator/releases/download/v11.0.0/Winlator_11.0.apk"
